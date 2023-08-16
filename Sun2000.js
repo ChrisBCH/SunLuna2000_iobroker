@@ -1,6 +1,6 @@
 // From iobroker Forum: "Huawei Sun2000 & ioBroker via JS script funktioniert"
 // https://forum.iobroker.net/topic/53005/huawei-sun2000-iobroker-via-js-script-funktioniert
-// Started by Kachel, modidfied and extended by Chris_B
+// Started by Kachel, modified and extended by Chris_B
 //
 
 // define javascript instance; please change according to your setup
