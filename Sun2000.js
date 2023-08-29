@@ -67,7 +67,7 @@ const RegToRead =
   [37800, 100],   // additional battery information -             read slow
   [38300, 100],   // additional battery information -             read slow
   [38400, 100],   // additional battery information -             read slow
-  [47081, 2]      // additional battery information -             read slow
+  [47081, 8]      // additional battery information -             read slow
 //[35300, 40]     // inverter power adjustments -                 do not read
 ];  
 const RegFast = 5;      // number of register spaces to read fast (must be < RegToRead.length)
@@ -245,19 +245,23 @@ function ProcessBattery(id)
         forcesetState(SHI + id + ".Batterystack.2.TotalDischarge",              getU32(Buffer[id-1], 37755) / 100, {name: "", unit: "kWh"});
     }
     // Battery register 32-41 (Storage related)
-    forcesetState(SHI + id + ".Battery.RatedCapacity",                          getU32(Buffer[id-1], 37758) / 1, {name: "", unit: "Wh"});
-    forcesetState(SHI + id + ".Battery.SOC",                                    getU16(Buffer[id-1], 37760) / 10, {name: "", unit: "%"});
-    forcesetState(SHI + id + ".Battery.RunningStatus",                          getU16(Buffer[id-1], 37762) / 1, {name: "", unit: ""});
-    forcesetState(SHI + id + ".Battery.BusVoltage",                             getU16(Buffer[id-1], 37763) / 10, {name: "", unit: "V"});
-    forcesetState(SHI + id + ".Battery.BusCurrent",                             getI16(Buffer[id-1], 37764) / 10, {name: "", unit: "A"});
-    forcesetState(SHI + id + ".Battery.ChargeAndDischargePower",                getI32(Buffer[id-1], 37765) / 1, {name: "", unit: "W"});
+    forcesetState(SHI + id + ".Battery.RatedCapacity",                          getU32(Buffer[id-1], 37758) / 1,   {name: "", unit: "Wh"});
+    forcesetState(SHI + id + ".Battery.SOC",                                    getU16(Buffer[id-1], 37760) / 10,  {name: "", unit: "%"});
+    forcesetState(SHI + id + ".Battery.RunningStatus",                          getU16(Buffer[id-1], 37762) / 1,   {name: "", unit: ""});
+    forcesetState(SHI + id + ".Battery.BusVoltage",                             getU16(Buffer[id-1], 37763) / 10,  {name: "", unit: "V"});
+    forcesetState(SHI + id + ".Battery.BusCurrent",                             getI16(Buffer[id-1], 37764) / 10,  {name: "", unit: "A"});
+    forcesetState(SHI + id + ".Battery.ChargeAndDischargePower",                getI32(Buffer[id-1], 37765) / 1,   {name: "", unit: "W"});
     forcesetState(SHI + id + ".Battery.TotalCharge",                            getU32(Buffer[id-1], 37780) / 100, {name: "", unit: "kWh"});
     forcesetState(SHI + id + ".Battery.TotalDischarge",                         getU32(Buffer[id-1], 37782) / 100, {name: "", unit: "kWh"});
     forcesetState(SHI + id + ".Battery.CurrentDayChargeCapacity",               getU32(Buffer[id-1], 37784) / 100, {name: "", unit: "kWh"});
     forcesetState(SHI + id + ".Battery.CurrentDayDischargeCapacity",            getU32(Buffer[id-1], 37786) / 100, {name: "Current DayDiscarge ", unit: "kWh"});
 
-    forcesetState(SHI + id + ".Battery.ChargingCutoffCapacity",                 getU16(Buffer[id-1], 47081) / 10, {name: "", unit: "%"});
-    forcesetState(SHI + id + ".Battery.DischargeCutoffCapacity",                getU16(Buffer[id-1], 47082) / 10, {name: "", unit: "%"});
+    forcesetState(SHI + id + ".Battery.ChargingCutoffCapacity",                 getU16(Buffer[id-1], 47081) / 10,  {name: "", unit: "%"});
+    forcesetState(SHI + id + ".Battery.DischargeCutoffCapacity",                getU16(Buffer[id-1], 47082) / 10,  {name: "", unit: "%"});
+    forcesetState(SHI + id + ".Battery.ForcedChargeDischargePeriod",            getU16(Buffer[id-1], 47083) / 1,   {name: "", unit: "mins"});
+    forcesetState(SHI + id + ".Battery.WorkingModeSettings",                    getU16(Buffer[id-1], 47086) / 1,   {name: "", unit: ""});
+    forcesetState(SHI + id + ".Battery.ChargeFromGridFunction",                 getU16(Buffer[id-1], 47087) / 1,   {name: "", unit: ""});
+    forcesetState(SHI + id + ".Battery.GridChargeCutoffSOC",                    getU16(Buffer[id-1], 47088) / 10,  {name: "", unit: "%"});
 
     // Battery registers 42+43 (Battery stack related)   
     if (BatteryUnits[id-1][1] > 0)

@@ -6,6 +6,12 @@ The development of this script started in the iobroker Forum "Huawei Sun2000 & i
 
 The script was started by Kachel; modified, corrected, extended and finally published on Github by Chris_B.
 
+## Unsolved Issues
+The most important unsolved issue is that the Daily yield does not take into account two things:
+1) Batter charge from the grid. This happens when the solar panels cannot load due to weather / season.
+2) Inverter loss.
+I try to find solutions, but any input is welcome.
+
 ## Computations
 The computations implemented are described by this diagram (that I found somewhere on the web):
 
@@ -21,7 +27,7 @@ The following picture shows an example Vis that shows the energy flow between th
 
 The following variables are used in the Vis display:
 
-- Yield Today: javascript.0.Solarpower.Derived.YieldToday
+- Yield Today: javascript.0.Solarpower.Derived.YieldToday (see issue described above)
 - Bat Charge: javascript.0.Solarpower.Huawei.Inverter.1.Batterystack.1.CurrentDayChargeCapacity
 - Bat Discharge: javascript.0.Solarpower.Huawei.Inverter.1.Batterystack.1.CurrentDayDischargeCapacity
 - Batterie Percent: javascript.0.Solarpower.Huawei.Inverter.1.Battery.SOC, darunter javascript.0.Solarpower.Derived.BatteryOverview
@@ -37,3 +43,13 @@ The following variables are used in the Vis display:
 - Import Today: javascript.0.Solarpower.Derived.GridImportToday
 
 The battery symbol is a png with a bar graph in the back.
+
+## Information logging
+The following information is logged every day one minute before midnight:
+1) Current Date
+2) Derived.YieldToday
+3) Derived.GridExportToday
+4) Derived.GridImportToday
+5) Derived.ConsumptionToday
+
+This information is appended the the file opt/iobroker/iobroker-data/SolarpowerLog.csv. This file can be used to derive statistics.
