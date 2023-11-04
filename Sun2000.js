@@ -6,20 +6,29 @@
 // define javascript instance; please change according to your setup
 const JavaInst = "javascript.0.";
 
-createState(JavaInst + "Solarpower.Derived.BatteryOverview",  "",  {read: true, write: true, name: "Battery Overview SOC"});
-createState(JavaInst + "Solarpower.Derived.HouseConsumption", "",  {read: true, write: true, name: "Consumption of House", unit: "W"});
-createState(JavaInst + "Solarpower.Derived.YieldToday",       "",  {read: true, write: true, name: "Yield Today", unit: "kW"});
-createState(JavaInst + "Solarpower.Derived.IsBatteryLoading",  0,  {read: true, write: true, name: "Luna 2000 Battery is loading", type: "number"});
-createState(JavaInst + "Solarpower.Derived.IsGridExporting",   0,  {read: true, write: true, name: "Exporting Power to Grid", type: "number"});
-createState(JavaInst + "Solarpower.Derived.PeakPanelPower",    0,  {read: true, write: true, name: "Peak panel power today"});
-createState(JavaInst + "Solarpower.Derived.GridExportSum",     0,  {read: true, write: true, name: "Total export to grid", unit: "kWh"});
-createState(JavaInst + "Solarpower.Derived.GridImportSum",     0,  {read: true, write: true, name: "Total import from grid", unit: "kWh"});
-createState(JavaInst + "Solarpower.Derived.GridExportToday",   0,  {read: true, write: true, name: "Export to grid today", unit: "kWh"});
-createState(JavaInst + "Solarpower.Derived.GridImportToday",   0,  {read: true, write: true, name: "Import from grid today", unit: "kWh"});
-createState(JavaInst + "Solarpower.Derived.ConsumptionToday",  0,  {read: true, write: true, name: "Consumption today", unit: "kWh"});
-createState(JavaInst + "Solarpower.Derived.ConsumptionSum",    0,  {read: true, write: true, name: "Consumption total sum", unit: "kWh"});
-createState(JavaInst + "Solarpower.Derived.ConsumptionStart",  0,  {read: true, write: true, name: "Consumption total sum at start of day", unit: "kWh"});
-createState(JavaInst + "Solarpower.Derived.WorkingMode",       0,  {read: true, write: true, name: "Working mode", unit: "kWh"});
+createState(JavaInst + "Solarpower.Derived.BatteryOverview",   "",  {read: true, write: true, name: "Battery Overview SOC"});
+createState(JavaInst + "Solarpower.Derived.HouseConsumption",  "",  {read: true, write: true, name: "Consumption of House", unit: "W"});
+createState(JavaInst + "Solarpower.Derived.YieldToday",        "",  {read: true, write: true, name: "Yield Today", unit: "kW"});
+createState(JavaInst + "Solarpower.Derived.IsBatteryLoading",   0,  {read: true, write: true, name: "Luna 2000 Battery is loading", type: "number"});
+createState(JavaInst + "Solarpower.Derived.IsGridExporting",    0,  {read: true, write: true, name: "Exporting Power to Grid", type: "number"});
+createState(JavaInst + "Solarpower.Derived.PeakPanelPower",     0,  {read: true, write: true, name: "Peak panel power today"});
+createState(JavaInst + "Solarpower.Derived.GridExportSum",      0,  {read: true, write: true, name: "Total export to grid", unit: "kWh"});
+createState(JavaInst + "Solarpower.Derived.GridImportSum",      0,  {read: true, write: true, name: "Total import from grid", unit: "kWh"});
+createState(JavaInst + "Solarpower.Derived.GridExportToday",    0,  {read: true, write: true, name: "Export to grid today", unit: "kWh"});
+createState(JavaInst + "Solarpower.Derived.GridImportToday",    0,  {read: true, write: true, name: "Import from grid today", unit: "kWh"});
+createState(JavaInst + "Solarpower.Derived.ConsumptionToday",   0,  {read: true, write: true, name: "Consumption today", unit: "kWh"});
+createState(JavaInst + "Solarpower.Derived.ConsumptionSum",     0,  {read: true, write: true, name: "Consumption total sum", unit: "kWh"});
+createState(JavaInst + "Solarpower.Derived.ConsumptionStart",   0,  {read: true, write: true, name: "Consumption total sum at start of day", unit: "kWh"});
+createState(JavaInst + "Solarpower.Derived.WorkingMode",        0,  {read: true, write: true, name: "Working mode", unit: ""});
+createState(JavaInst + "Solarpower.Derived.DeviceStatus",       0,  {read: true, write: true, name: "Device Status", unit: ""});
+createState(JavaInst + "Solarpower.Derived.ChargeFromGrid",     0,  {read: true, write: true, name: "Charge from grid", unit: ""});
+createState(JavaInst + "Solarpower.Derived.BatteryCharge",      0,  {read: true, write: true, name: "Battery charge power", unit: ""});
+createState(JavaInst + "Solarpower.Derived.PanelPower",         0,  {read: true, write: true, name: "Panel Power (UxI)", unit: "W"});
+createState(JavaInst + "Solarpower.Derived.BatteryStackStatus", 0,  {read: true, write: true, name: "Battery Stack Status", unit: ""});
+createState(JavaInst + "Solarpower.Derived.BatteryStatus",      0,  {read: true, write: true, name: "Battery Status", unit: ""});
+createState(JavaInst + "Solarpower.Derived.BatteryTemperature", 0,  {read: true, write: true, name: "Battery Temperature", unit: ""});
+createState(JavaInst + "Solarpower.Derived.InverterTemperature",0,  {read: true, write: true, name: "Inverter Temperature", unit: ""});
+createState(JavaInst + "Solarpower.Derived.GridFrequency",      0,  {read: true, write: true, name: "Grid Frequency", unit: ""});
 
 
 var ModbusRTU = require("modbus-serial");
@@ -426,19 +435,15 @@ function ProcessData()
     ProcessPowerMeterStatus();
 
     // get SOC of first battery stack and combine to one string
-    var BatOverview = "";
-    for(var j = 1; j <= BatteryUnits[0][0]; j++)
-    { 
-        if (j > 1) BatOverview += ", ";
-        BatOverview += getState(JavaInst + "Solarpower.Huawei.Inverter.1.Batterystack.1.Battery" + j + ".BatterySOC").val + "%";
+    {   var BatOverview = "";
+        for (var j = 1; j <= BatteryUnits[0][0]; j++)
+        { 
+            if (j > 1) BatOverview += ", ";
+            BatOverview += getState(JavaInst + "Solarpower.Huawei.Inverter.1.Batterystack.1.Battery" + j + ".BatterySOC").val + "%";
+        }
+        setState(JavaInst + "Solarpower.Derived.BatteryOverview", BatOverview);
     }
-    setState(JavaInst + "Solarpower.Derived.BatteryOverview", BatOverview);
 
-    // determine peak panel power
-    var PanelPower = getState(JavaInst + "Solarpower.Huawei.Inverter.1.InputPower").val;
-    var PanelMax = getState(JavaInst + "Solarpower.Derived.PeakPanelPower").val;
-    if (PanelPower > PanelMax) setState(JavaInst + "Solarpower.Derived.PeakPanelPower", PanelPower);
-    
     // determine power used by house
     setState(JavaInst + "Solarpower.Derived.HouseConsumption", getState(JavaInst + "Solarpower.Huawei.Inverter.1.ActivePower").val * 1000 -
         getState(JavaInst + "Solarpower.Huawei.Meter.ActivePower").val);
@@ -468,20 +473,136 @@ function ProcessData()
         getState(JavaInst + "Solarpower.Derived.ConsumptionStart").val); 
 
     // convert working mode to string that can be displayed
-    var wom = "";
-    switch (getState(JavaInst + "Solarpower.Huawei.Inverter.1.Batterystack.1.WorkingMode").val)
-    {
-        case  0: wom = "none"; break;
-        case  1: wom = "Forcible charge/discharge"; break;
-        case  2: wom = "Time of Use(LG)"; break;
-        case  3: wom = "Fixed charge/discharge"; break;
-        case  4: wom = "Maximise self consumption"; break;
-        case  5: wom = "Fully fed to grid"; break;
-        case  6: wom = "Time of Use(LUNA2000)"; break;
-        default: wom = "undefined";
+    {   var wom = "";
+        switch (getState(JavaInst + "Solarpower.Huawei.Inverter.1.Batterystack.1.WorkingMode").val)
+        {
+            case  0: wom = "none"; break;
+            case  1: wom = "Forcible charge/discharge"; break;
+            case  2: wom = "Time of Use(LG)"; break;
+            case  3: wom = "Fixed charge/discharge"; break;
+            case  4: wom = "Maximise self consumption"; break;
+            case  5: wom = "Fully fed to grid"; break;
+            case  6: wom = "Time of Use(LUNA2000)"; break;
+            default: wom = "undefined";
+        }
+        setState(JavaInst + "Solarpower.Derived.WorkingMode", wom);
     }
-    setState(JavaInst + "Solarpower.Derived.WorkingMode", wom);
     
+    // convert Device Status to string that can be displayed
+    {   var devstat = "";
+        switch (getState(JavaInst + "Solarpower.Huawei.Inverter.1.DeviceStatus").val)
+        {
+            case 0x0000: devstat = "Standby: initializing"; break;
+            case 0x0001: devstat = "Standby: detecting insulation resistance"; break;
+            case 0x0002: devstat = "Standby: detecting irradiation"; break;
+            case 0x0003: devstat = "Standby: drid detecting"; break;
+            case 0x0100: devstat = "Starting"; break;
+            case 0x0200: devstat = "On-grid"; break;
+            case 0x0201: devstat = "Grid connection: power limited"; break;
+            case 0x0202: devstat = "Grid connection: selfderating"; break;
+            case 0x0203: devstat = "Off-grid Running"; break;
+            case 0x0300: devstat = "Shutdown: fault"; break;
+            case 0x0301: devstat = "Shutdown: command"; break;
+            case 0x0302: devstat = "Shutdown: OVGR"; break;
+            case 0x0303: devstat = "Shutdown: communication disconnected"; break;
+            case 0x0304: devstat = "Shutdown: power limited"; break;
+            case 0x0305: devstat = "Shutdown: manual startup required"; break;
+            case 0x0306: devstat = "Shutdown: DC switches disconnected"; break;
+            case 0x0307: devstat = "Shutdown: rapid cutoff"; break;
+            case 0x0308: devstat = "Shutdown: input underpower"; break;
+            case 0x0401: devstat = "Grid scheduling: cosPhi-P curve"; break;
+            case 0x0402: devstat = "Grid scheduling: Q-U curve"; break;
+            case 0x0403: devstat = "Grid scheduling: PF-U curve"; break;
+            case 0x0404: devstat = "Grid scheduling: dry contact"; break;
+            case 0x0405: devstat = "Grid scheduling: Q-P curve"; break;
+            case 0x0500: devstat = "Spotcheck ready"; break;
+            case 0x0501: devstat = "Spotchecking"; break;
+            case 0x0600: devstat = "Inspecting"; break;
+            case 0x0700: devstat = "AFCI self check"; break;
+            case 0x0800: devstat = "I-V scanning"; break;
+            case 0x0900: devstat = "DC input detection"; break;
+            case 0x0A00: devstat = "Running: off-grid charging"; break;
+            case 0xA000: devstat = "Standby: no irradiation"; break;
+            default:     devstat = "undefined";
+        }
+        setState(JavaInst + "Solarpower.Derived.DeviceStatus", devstat);
+    }
+
+    // convert charge from grid to string
+    {   var cfg = "";
+        switch (getState(JavaInst + SHI + "1.Battery.ChargeFromGridFunction").val)
+        {
+            case  0: wom = "disabled"; break;
+            case  1: wom = "enabled"; break;
+            default: wom = "undefined";
+        }
+        setState(JavaInst + "Solarpower.Derived.ChargeFromGrid", wom);
+    }
+
+    // set the following states depending on the running status of the inverter:
+    // 1) battery charge/discharge, 2) grid frequency
+    {   
+        // if device status contains 0x0200 then inverter is running
+        if ((getState(JavaInst + "Solarpower.Huawei.Inverter.1.DeviceStatus").val & 0x0200) != 0)
+        {   setState(JavaInst + "Solarpower.Derived.BatteryCharge",       getState(JavaInst + "Solarpower.Huawei.Inverter.1.Batterystack.1.ChargeAndDischargePower").val + " W");
+            setState(JavaInst + "Solarpower.Derived.BatteryTemperature",  getState(JavaInst + "Solarpower.Huawei.Inverter.1.Batterystack.1.BatteryTemperature").val + " °C");
+            setState(JavaInst + "Solarpower.Derived.InverterTemperature", getState(JavaInst + "Solarpower.Huawei.Inverter.1.InternalTemperature").val + " °C");
+            setState(JavaInst + "Solarpower.Derived.GridFrequency",       getState(JavaInst + "Solarpower.Huawei.Inverter.1.GridFrequency").val + " Hz");
+        }   else
+        {   setState(JavaInst + "Solarpower.Derived.BatteryCharge",      "stdby");
+            setState(JavaInst + "Solarpower.Derived.BatteryTemperature", "-");
+            setState(JavaInst + "Solarpower.Derived.InverterTemperature","-");
+            setState(JavaInst + "Solarpower.Derived.GridFrequency",      "-");
+        }
+    }
+
+    // determine raw panel power (multiplying current times voltage)
+    {
+        var power = (getState(JavaInst + "Solarpower.Huawei.Inverter.1.String.1_Voltage").val *
+                     getState(JavaInst + "Solarpower.Huawei.Inverter.1.String.1_Current").val) / 1000;
+        setState(JavaInst + "Solarpower.Derived.PanelPower", power);
+
+        // determine peak panel power
+        var PanelMax = getState(JavaInst + "Solarpower.Derived.PeakPanelPower").val;
+        if (power > PanelMax) setState(JavaInst + "Solarpower.Derived.PeakPanelPower", power);
+    }
+    
+
+    // determine the status of the battery stack
+    {   
+        var status = "";
+        switch(getState(JavaInst + "Solarpower.Huawei.Inverter.1.Batterystack.1.RunningStatus").val)
+        {
+            case  0: status = "offline";    break;
+            case  1: status = "standby";    break;
+            case  2: status = "running";    break;
+            case  3: status = "faulty";     break;
+            case  4: status = "sleep mode"; break;
+            default: status = "undefined";
+        }
+        setState(JavaInst + "Solarpower.Derived.BatteryStackStatus", status);
+    }
+
+    // determine the status of the individual batteries
+    {
+        var status = "";
+        
+        for (i = 1; i <= BatteryUnits[0][0]; i++)
+        {
+            switch(getState(JavaInst + "Solarpower.Huawei.Inverter.1.Batterystack.1.Battery" + i + ".WorkingStatus").val)
+            {
+                case  0: status += "offline";    break;
+                case  1: status += "standby";    break;
+                case  2: status += "running";    break;
+                case  3: status += "faulty";     break;
+                case  4: status += "sleep";      break;
+                default: status += "undefined";
+            }
+            if (i < BatteryUnits[0][0]) status += ", ";
+            setState(JavaInst + "Solarpower.Derived.BatteryStatus", status);
+        }
+    }
+
     testCreateState = 1;                // do not check on createState any more
 }
 
